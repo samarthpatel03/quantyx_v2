@@ -25,8 +25,8 @@ def calculate_features(df: pd.DataFrame) -> pd.DataFrame:
     df["RSI"] = 100 - (100 / (1 + rs))
 
     # ── MACD ──────────────────────────────────────────────────
-    ema12 = df["Close"].ewm(span=12, adjust=False).mean()
-    ema26 = df["Close"].ewm(span=26, adjust=False).mean()
+    ema12 = df["Close"].ewm(span=12).mean()
+    ema26 = df["Close"].ewm(span=26).mean()
     df["MACD"]         = ema12 - ema26
     df["Signal_Line"]  = df["MACD"].ewm(span=9, adjust=False).mean()
     df["MACD_Histogram"] = df["MACD"] - df["Signal_Line"]

@@ -4,7 +4,7 @@ import yfinance as yf
 import pandas as pd
 
 
-def download_stock_data(ticker: str, period: str = "2y") -> pd.DataFrame:
+def download_stock_data(ticker: str, period: str = "3y") -> pd.DataFrame:
     """
     Download OHLCV data from Yahoo Finance for a given NSE ticker.
     Raises ValueError if ticker is invalid or no data is returned.
