@@ -17,7 +17,7 @@ const UA = "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 Chrome/
 const allowedOrigins = [
   'http://localhost:5173',          // Local Vite dev
   'http://localhost:3000',          // Local build preview
-  'https://quantyx-two.vercel.app/'
+  'https://quantyx-two.vercel.app'
 ];
 
 app.use(cors({
