@@ -28,7 +28,6 @@ export default function Login() {
       const payload = isSignUp ? { name: fullName, email, password } : { email, password };
 
       // Make the request to your Express backend
-      // Note: Adjust the fetch URL to match your backend port if it's not 5000
       const response = await fetch(`http://localhost:3001${endpoint}`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
