@@ -12,12 +12,27 @@ const PORT = 3001;
 const NSE_BASE = "https://query2.finance.yahoo.com";
 const UA = "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 Chrome/124.0.0.0 Safari/537.36";
 
+// server.js
+
+const allowedOrigins = [
+  'http://localhost:5173',          // Local Vite dev
+  'http://localhost:3000',          // Local build preview
+  'https://quantyx-two.vercel.app/'
+];
+
 app.use(cors({
-  origin: (origin, cb) =>
-    (!origin || /^http:\/\/localhost(:\d+)?$/.test(origin))
-      ? cb(null, true)
-      : cb(new Error("CORS: origin not allowed")),
+  origin: (origin, cb) => {
+    // Allow requests with no origin (like mobile apps or curl) 
+    // or if the origin is in our allowed list
+    if (!origin || allowedOrigins.includes(origin)) {
+      cb(null, true);
+    } else {
+      cb(new Error("CORS: origin not allowed"));
+    }
+  },
+  credentials: true // Important for handling login sessions/cookies
 }));
+
 app.use(express.json());
 
 // ── ML Analyse microservice proxy ─────────────────────────────
