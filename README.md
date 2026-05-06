@@ -118,9 +118,6 @@ The AI Advisor uses the Anthropic Claude API. To use it:
 4. In the Quantyx app, go to the **Advisor** page
 5. Click **"Set API Key"** and paste your key
 6. Your key is saved in your browser's local storage — never sent to any server
-
-> Note: The Anthropic API has usage-based pricing. New accounts get free credits to start.
-
 ---
 
 ## Theme
