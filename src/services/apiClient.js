@@ -1,6 +1,5 @@
-// apiClient.js — NSE-only API client with symbol normalization and JWT Auth
-const API_BASE_URL = "http://localhost:3001/api"; // Make sure this matches your Express port!
-
+// ✅ This checks for the Vercel variable first, then falls back to localhost for development
+const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || "http://localhost:3001/api";
 // Normalize to bare symbol (no .NS) for storage/display consistency
 export function normalizeSymbol(symbol) {
   if (!symbol) return "";
