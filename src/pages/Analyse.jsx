@@ -12,6 +12,7 @@ import {
 } from "lucide-react";
 import { createChart, LineSeries } from "lightweight-charts";
 import { NSE_STOCKS } from "@/lib/nseStocks";
+import { fetchAnalysisData } from '../services/apiClient';
 
 const API = "http://localhost:3001/api/analyse";
 
@@ -356,9 +357,8 @@ export default function Analyse() {
     setShowSug(false);
 
     try {
-      const res  = await fetch(`${API}/${clean}`);
-      const data = await res.json();
-      if (!res.ok) throw new Error(data.error || "Prediction failed");
+      // fetchAnalysisData automatically grabs your token and handles the JSON/errors!
+      const data = await fetchAnalysisData(clean); 
       setResult(data);
     } catch (e) {
       setError(e.message);

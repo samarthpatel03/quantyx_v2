@@ -1,4 +1,5 @@
 import { useState, useEffect } from "react";
+import { fetchAnalysisData } from '../services/apiClient';
 import { motion, AnimatePresence } from "framer-motion";
 import { RefreshCw, TrendingDown, TrendingUp, ChevronDown, ChevronUp } from "lucide-react";
 import { useSearchParams } from "react-router-dom";
@@ -46,6 +47,7 @@ export default function Dashboard() {
   const [listOpen, setListOpen] = useState(false);
   const [extraStock, setExtraStock] = useState(null); // for stocks not in default list
 
+
   // Update selected stock from URL param
   useEffect(() => {
     const s = searchParams.get("stock");
@@ -60,6 +62,7 @@ export default function Dashboard() {
       setExtraStock(null);
     }
   }, [sym]);
+
 
   // ── Data ─────────────────────────────────────────────────────
   const { data: quotes,   isLoading: qLoad, isError: qErr  } = useQuotes(DEFAULT_SYMBOLS);
@@ -97,6 +100,7 @@ export default function Dashboard() {
             className="w-full h-8 px-3 rounded-lg bg-muted/40 border border-border/30 text-xs focus:outline-none focus:border-primary/40 transition-colors"
           />
         </div>
+        
 
         {/* Stock list */}
         <div className="flex-1 overflow-y-auto">
@@ -138,6 +142,7 @@ export default function Dashboard() {
 
       {/* ── Main content ──────────────────────────────────────── */}
       <div className="flex-1 flex flex-col overflow-hidden">
+
 
         {/* Mobile stock pills */}
         <div className="md:hidden shrink-0">

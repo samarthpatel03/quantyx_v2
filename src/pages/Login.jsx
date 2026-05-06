@@ -1,13 +1,65 @@
 import { useState } from "react";
 import { motion } from "framer-motion";
 import { useNavigate } from "react-router-dom";
-import { ArrowLeft, Github, Mail } from "lucide-react";
+import { ArrowLeft, Github, Mail, Loader2 } from "lucide-react";
 import { ThemeToggle } from "@/components/ThemeToggle";
 import CandlestickAnimation from "@/components/CandlestickAnimation";
 
 export default function Login() {
   const navigate = useNavigate();
   const [isSignUp, setIsSignUp] = useState(false);
+  
+  // 1. Add state for your form inputs and UI feedback
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [fullName, setFullName] = useState("");
+  const [error, setError] = useState("");
+  const [isLoading, setIsLoading] = useState(false);
+
+  // 2. Handle the form submission
+  const handleSubmit = async (e) => {
+    e.preventDefault(); // Prevent page reload
+    setError("");       // Clear previous errors
+    setIsLoading(true);
+
+    try {
+      // Determine the endpoint and payload based on login vs signup
+      const endpoint = isSignUp ? '/api/auth/register' : '/api/auth/login';
+      const payload = isSignUp ? { name: fullName, email, password } : { email, password };
+
+      // Make the request to your Express backend
+      // Note: Adjust the fetch URL to match your backend port if it's not 5000
+      const response = await fetch(`http://localhost:3001${endpoint}`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(payload),
+      });
+
+      const data = await response.json();
+
+      if (!response.ok) {
+        throw new Error(data.message || "Authentication failed");
+      }
+
+      // 3. Save the token and redirect to dashboard
+      localStorage.setItem("token", data.token);
+      navigate("/dashboard");
+
+    } catch (err) {
+      setError(err.message);
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  // Helper to clear form when toggling between Login/Signup
+  const toggleMode = () => {
+    setIsSignUp(!isSignUp);
+    setError("");
+    setEmail("");
+    setPassword("");
+    setFullName("");
+  };
 
   return (
     <div className="min-h-screen bg-background flex flex-col lg:flex-row">
@@ -49,7 +101,7 @@ export default function Login() {
           <p className="text-muted-foreground mb-6 text-sm">{isSignUp?"Start your trading journey with Quantyx":"Sign in to access your dashboard"}</p>
 
           <div className="grid grid-cols-2 gap-3 mb-6">
-            <button onClick={()=>navigate("/dashboard")} className="h-11 glass rounded-lg flex items-center justify-center gap-2 text-sm hover:text-foreground text-muted-foreground transition-colors">
+            <button type="button" className="h-11 glass rounded-lg flex items-center justify-center gap-2 text-sm hover:text-foreground text-muted-foreground transition-colors">
               <svg viewBox="0 0 24 24" className="w-4 h-4 shrink-0">
                 <path fill="currentColor" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92a5.06 5.06 0 0 1-2.2 3.32v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.1z"/>
                 <path fill="currentColor" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/>
@@ -58,7 +110,7 @@ export default function Login() {
               </svg>
               Google
             </button>
-            <button onClick={()=>navigate("/dashboard")} className="h-11 glass rounded-lg flex items-center justify-center gap-2 text-sm hover:text-foreground text-muted-foreground transition-colors">
+            <button type="button" className="h-11 glass rounded-lg flex items-center justify-center gap-2 text-sm hover:text-foreground text-muted-foreground transition-colors">
               <Github className="w-4 h-4 shrink-0" /> GitHub
             </button>
           </div>
@@ -69,19 +121,62 @@ export default function Login() {
             <div className="flex-1 h-px bg-border" />
           </div>
 
-          <div className="space-y-4">
-            {isSignUp && <input placeholder="Full name" className="w-full h-11 px-3 rounded-lg bg-muted/50 border border-border/50 text-sm focus:outline-none focus:border-primary/50 focus:ring-1 focus:ring-primary/30 transition-colors" />}
-            <input type="email" placeholder="Email address" className="w-full h-11 px-3 rounded-lg bg-muted/50 border border-border/50 text-sm focus:outline-none focus:border-primary/50 focus:ring-1 focus:ring-primary/30 transition-colors" />
-            <input type="password" placeholder="Password" className="w-full h-11 px-3 rounded-lg bg-muted/50 border border-border/50 text-sm focus:outline-none focus:border-primary/50 focus:ring-1 focus:ring-primary/30 transition-colors" />
-            <button onClick={()=>navigate("/dashboard")} className="w-full h-11 rounded-lg bg-primary text-primary-foreground font-semibold text-sm flex items-center justify-center gap-2 hover:opacity-90 transition-opacity">
-              <Mail className="w-4 h-4" /> {isSignUp?"Create Account":"Sign In"}
+          {/* Added Error Message Display */}
+          {error && (
+            <div className="mb-4 p-3 text-sm text-red-500 bg-red-500/10 border border-red-500/20 rounded-lg">
+              {error}
+            </div>
+          )}
+
+          {/* Form Wrapper Added Here */}
+          <form onSubmit={handleSubmit} className="space-y-4">
+            {isSignUp && (
+              <input 
+                value={fullName}
+                onChange={(e) => setFullName(e.target.value)}
+                placeholder="Full name" 
+                required
+                disabled={isLoading}
+                className="w-full h-11 px-3 rounded-lg bg-muted/50 border border-border/50 text-sm focus:outline-none focus:border-primary/50 focus:ring-1 focus:ring-primary/30 transition-colors disabled:opacity-50" 
+              />
+            )}
+            <input 
+              type="email" 
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+              placeholder="Email address" 
+              required
+              disabled={isLoading}
+              className="w-full h-11 px-3 rounded-lg bg-muted/50 border border-border/50 text-sm focus:outline-none focus:border-primary/50 focus:ring-1 focus:ring-primary/30 transition-colors disabled:opacity-50" 
+            />
+            <input 
+              type="password" 
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+              placeholder="Password" 
+              required
+              disabled={isLoading}
+              className="w-full h-11 px-3 rounded-lg bg-muted/50 border border-border/50 text-sm focus:outline-none focus:border-primary/50 focus:ring-1 focus:ring-primary/30 transition-colors disabled:opacity-50" 
+            />
+            
+            <button 
+              type="submit" 
+              disabled={isLoading}
+              className="w-full h-11 rounded-lg bg-primary text-primary-foreground font-semibold text-sm flex items-center justify-center gap-2 hover:opacity-90 transition-opacity disabled:opacity-50"
+            >
+              {isLoading ? (
+                <Loader2 className="w-4 h-4 animate-spin" />
+              ) : (
+                <Mail className="w-4 h-4" />
+              )}
+              {isSignUp ? "Create Account" : "Sign In"}
             </button>
-          </div>
+          </form>
 
           <p className="text-center text-sm text-muted-foreground mt-6">
-            {isSignUp?"Already have an account?":"Don't have an account?"}{" "}
-            <button onClick={()=>setIsSignUp(!isSignUp)} className="text-primary hover:underline font-medium">
-              {isSignUp?"Sign in":"Sign up"}
+            {isSignUp ? "Already have an account?" : "Don't have an account?"}{" "}
+            <button type="button" onClick={toggleMode} className="text-primary hover:underline font-medium">
+              {isSignUp ? "Sign in" : "Sign up"}
             </button>
           </p>
         </div>

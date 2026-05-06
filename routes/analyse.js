@@ -1,9 +1,5 @@
-// routes/analyse.js
-// Add this to your server.js:
-//   import analyseRouter from "./routes/analyse.js";
-//   app.use("/api/analyse", analyseRouter);
-
 import express from "express";
+import authenticateToken from "../middleware/auth.js"; // Important: Must include .js extension
 
 const router = express.Router();
 const ML_SERVICE = "http://localhost:8000";
@@ -26,6 +22,7 @@ async function mlFetch(path) {
 }
 
 // GET /api/analyse/health
+// We leave this public so you can ping the ML service status without a token
 router.get("/health", async (_req, res) => {
   try {
     const data = await mlFetch("/health");
@@ -36,12 +33,15 @@ router.get("/health", async (_req, res) => {
 });
 
 // GET /api/analyse/:ticker
-// e.g. /api/analyse/RELIANCE  or  /api/analyse/RELIANCE.NS
-router.get("/:ticker", async (req, res) => {
+// PROTECTED ROUTE: We added 'authenticateToken' as the second parameter
+router.get("/:ticker", authenticateToken, async (req, res) => {
   const ticker = req.params.ticker.trim().toUpperCase();
   if (!ticker) return res.status(400).json({ error: "Ticker is required." });
 
   try {
+    // If you need to know WHO made the request, you can access req.user here!
+    // console.log("User requesting data:", req.user.userId);
+
     const data = await mlFetch(`/predict/${ticker}`);
     res.json(data);
   } catch (err) {

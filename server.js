@@ -6,7 +6,7 @@
 import express       from "express";
 import cors          from "cors";
 import analyseRouter from "./routes/analyse.js";
-
+import authRouter    from "./routes/auth.js"; 
 const app  = express();
 const PORT = 3001;
 const NSE_BASE = "https://query2.finance.yahoo.com";
@@ -22,6 +22,8 @@ app.use(express.json());
 
 // ── ML Analyse microservice proxy ─────────────────────────────
 app.use("/api/analyse", analyseRouter);
+// ── Auth microservice proxy ───────────────────────────────────
+app.use("/api/auth", authRouter)
 
 // ── Symbol normalizer (NSE only) ──────────────────────────────
 function normalizeSymbol(symbol) {
@@ -292,3 +294,4 @@ app.listen(PORT, () => {
 
 process.on("uncaughtException",  (e) => console.error("Uncaught:", e.message));
 process.on("unhandledRejection", (e) => console.error("Unhandled:", e));
+
