@@ -129,3 +129,37 @@ def walk_forward_validation(
 
     avg = sum(accuracies) / len(accuracies) if accuracies else 0.0
     return accuracies, avg
+
+def calculate_risk_metrics(df: pd.DataFrame, predictions: np.ndarray, split: int) -> dict:
+    """
+    Calculate Sharpe ratio and maximum drawdown for ML strategy vs buy and hold.
+    """
+    import numpy as np
+    
+    # Get the daily returns for the test period
+    test_returns = df['Close'].pct_change().iloc[split+1:].values
+    pred_aligned = predictions[:len(test_returns)]
+
+    # Strategy returns: Market return * Prediction (1 for up, 0 for flat/down)
+    strategy_returns = test_returns * pred_aligned
+
+    # ── Sharpe Ratio (Annualised) ─────────────────────────────
+    def sharpe(returns):
+        if returns.std() == 0:
+            return 0.0
+        return (returns.mean() / returns.std()) * np.sqrt(252)
+
+    # ── Maximum Drawdown (%) ──────────────────────────────────
+    def max_drawdown(returns):
+        if len(returns) == 0: return 0.0
+        cumulative = (1 + returns).cumprod()
+        rolling_max = np.maximum.accumulate(cumulative)
+        drawdowns = (cumulative - rolling_max) / rolling_max
+        return drawdowns.min() * 100
+
+    return {
+        'sharpe_market':   round(float(sharpe(test_returns)), 3),
+        'sharpe_strategy': round(float(sharpe(strategy_returns)), 3),
+        'mdd_market':      round(float(max_drawdown(test_returns)), 2),
+        'mdd_strategy':    round(float(max_drawdown(strategy_returns)), 2),
+    }

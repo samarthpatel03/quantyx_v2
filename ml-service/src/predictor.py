@@ -11,6 +11,7 @@ from .model       import (
     calculate_strategy_returns,
     predict_with_sentiment,
     walk_forward_validation,
+    calculate_risk_metrics,
 )
 from .sentiment import get_news_sentiment, interpret_sentiment
 from .config    import FEATURES
@@ -40,6 +41,7 @@ def predict_stock(ticker: str) -> dict:
 
     # ── 4. Strategy returns ───────────────────────────────────
     buy_hold, strategy = calculate_strategy_returns(df, predictions, split)
+    risk_metrics = calculate_risk_metrics(df, predictions, split)
 
     # ── 5. Walk-forward validation (3 folds — faster for web) ─
     wf_accuracies, wf_avg = walk_forward_validation(df, FEATURES, n_splits=3)
@@ -110,6 +112,7 @@ def predict_stock(ticker: str) -> dict:
         "buyHoldReturn":round(float(buy_hold), 2),
         "mlReturn":     round(float(strategy), 2),
         "outperformance": round(float(strategy - buy_hold), 2),
+        "riskMetrics": risk_metrics,
 
         "sentiment": {
             "score":  round(float(sentiment_score), 3),

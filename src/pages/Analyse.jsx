@@ -47,6 +47,41 @@ function SignalBadge({ signal }) {
   );
 }
 
+
+// ─── Risk Metrics Card ───────────────────────────────────────────────────────
+
+function RiskMetricsCard({ metrics }) {
+  if (!metrics) return null;
+
+  return (
+    <div className="glass rounded-2xl p-5 border border-primary/10">
+      <div className="flex items-center gap-2 mb-4">
+        <Activity className="w-4 h-4 text-primary" />
+        <h2 className="text-sm font-mono font-bold">Risk-Adjusted Performance</h2>
+      </div>
+      <div className="grid grid-cols-2 gap-4">
+        <div className="space-y-1">
+          <p className="text-[10px] text-muted-foreground uppercase tracking-widest font-mono">Sharpe Ratio</p>
+          <p className={cn("text-xl font-bold font-mono", metrics.sharpe_strategy > metrics.sharpe_market ? "text-primary" : "text-foreground")}>
+            {metrics.sharpe_strategy}
+          </p>
+          <p className="text-[10px] text-muted-foreground font-mono">Market: {metrics.sharpe_market}</p>
+        </div>
+        <div className="space-y-1">
+          <p className="text-[10px] text-muted-foreground uppercase tracking-widest font-mono">Max Drawdown</p>
+          <p className={cn("text-xl font-bold font-mono", Math.abs(metrics.mdd_strategy) < Math.abs(metrics.mdd_market) ? "text-primary" : "text-destructive")}>
+            {metrics.mdd_strategy}%
+          </p>
+          <p className="text-[10px] text-muted-foreground font-mono">Market: {metrics.mdd_market}%</p>
+        </div>
+      </div>
+      <p className="text-[10px] text-muted-foreground mt-3 font-mono leading-tight italic">
+        * Higher Sharpe is better. Lower (less negative) Drawdown is safer.
+      </p>
+    </div>
+  );
+}
+
 // ─── Indicator Pill ───────────────────────────────────────────────────────────
 
 function IndicatorPill({ label, value, sub }) {
@@ -573,6 +608,8 @@ export default function Analyse() {
                 <span>70 → Overbought</span>
               </div>
             </div>
+
+            <RiskMetricsCard metrics={result.riskMetrics} />
 
             {/* Walk-forward + Feature Importance side by side */}
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
