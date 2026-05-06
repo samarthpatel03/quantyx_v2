@@ -9,7 +9,6 @@ import Dashboard  from "./pages/Dashboard";
 import Analyse    from "./pages/Analyse";
 import Watchlist  from "./pages/Watchlist";
 import Simulator  from "./pages/Simulator";
-import Advisor    from "./pages/Advisor";
 import Learn      from "./pages/Learn";
 import Settings   from "./pages/Settings";
 import AppShell   from "./components/nav/AppShell";
@@ -43,7 +42,6 @@ export default function App() {
             <Route path="/analyse"   element={<AppLayout><Analyse /></AppLayout>} />
             <Route path="/watchlist" element={<AppLayout><Watchlist /></AppLayout>} />
             <Route path="/simulator" element={<AppLayout><Simulator /></AppLayout>} />
-            <Route path="/advisor"   element={<AppLayout><Advisor /></AppLayout>} />
             <Route path="/learn"     element={<AppLayout><Learn /></AppLayout>} />
             <Route path="/settings"  element={<AppLayout><Settings /></AppLayout>} />
 

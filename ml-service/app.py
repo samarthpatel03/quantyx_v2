@@ -45,35 +45,6 @@ genai.configure(api_key=os.environ.get("GEMINI_API_KEY"))
 
 # Initialize the model (Gemini 1.5 Flash is great for fast text responses)
 model = genai.GenerativeModel('gemini-1.5-flash')
-
-@app.route('/api/advisor', methods=['POST'])
-def ask_advisor():
-    data = request.get_json()
-    user_message = data.get('message')
-
-    if not user_message:
-        return jsonify({'error': 'Message is required'}), 400
-
-    try:
-        # Give the AI context about its role in your app
-        prompt = f"""
-        You are the AI Financial Advisor for an app called Quantyx. 
-        Quantyx is a stock market prediction and analysis system.
-        Provide concise, analytical, and professional financial insights.
-        Do not give explicit financial advice to buy or sell, but analyze the situation.
-        
-        User's query: {user_message}
-        """
-
-        # Call the Gemini API
-        response = model.generate_content(prompt)
-        
-        return jsonify({'reply': response.text}), 200
-
-    except Exception as e:
-        print(f"Error calling Gemini: {e}")
-        return jsonify({'error': 'Failed to generate response'}), 500
-    
     
 # ── Predict ───────────────────────────────────────────────────
 @app.get("/predict/<ticker>")

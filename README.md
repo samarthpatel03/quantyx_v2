@@ -9,7 +9,6 @@ A full-featured stock market app for NSE/BSE with live data, AI analysis, paper 
 - **Live Market Data** — Real-time NSE/BSE quotes via Yahoo Finance
 - **AI Stock Analyser** — ML-powered predictions with Random Forest + VADER sentiment
 - **Paper Trading Simulator** — Virtual ₹1,00,000 portfolio with P&L tracking
-- **AI Advisor** — Chat with Claude AI about stocks and market concepts (requires Anthropic API key)
 - **Learn Section** — 30+ beginner-friendly topics on stocks, trading, risk management
 - **Watchlist** — Track your favourite stocks with live prices
 
@@ -25,7 +24,7 @@ quantyx/
 │   │   ├── Analyse.jsx       ← ML stock analyser
 │   │   ├── Watchlist.jsx     ← Watchlist with live prices
 │   │   ├── Simulator.jsx     ← Paper trading simulator
-│   │   ├── Advisor.jsx       ← AI chat advisor (Claude API)
+│   │   
 │   │   ├── Learn.jsx         ← Educational content
 │   │   └── Settings.jsx
 │   ├── components/
@@ -108,17 +107,6 @@ Then open your browser and go to **http://localhost:5173**
 
 ---
 
-## Setting up the AI Advisor
-
-The AI Advisor uses the Anthropic Claude API. To use it:
-
-1. Go to **console.anthropic.com** and create a free account
-2. Navigate to **API Keys** → **Create Key**
-3. Copy the key (it starts with `sk-ant-`)
-4. In the Quantyx app, go to the **Advisor** page
-5. Click **"Set API Key"** and paste your key
-6. Your key is saved in your browser's local storage — never sent to any server
----
 
 ## Theme
 
