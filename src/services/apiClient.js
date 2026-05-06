@@ -1,6 +1,5 @@
 // ✅ This checks for the Vercel variable first, then falls back to localhost for development
-const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || "http://localhost:3001/api";
-// Normalize to bare symbol (no .NS) for storage/display consistency
+const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || "https://quantyx-api-y6ku.onrender.com/api";// Normalize to bare symbol (no .NS) for storage/display consistency
 export function normalizeSymbol(symbol) {
   if (!symbol) return "";
   return symbol.toUpperCase().trim().replace(/\.NS$/i, "");
