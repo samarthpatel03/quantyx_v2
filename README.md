@@ -24,7 +24,6 @@ quantyx/
 │   │   ├── Analyse.jsx       ← ML stock analyser
 │   │   ├── Watchlist.jsx     ← Watchlist with live prices
 │   │   ├── Simulator.jsx     ← Paper trading simulator
-│   │   
 │   │   ├── Learn.jsx         ← Educational content
 │   │   └── Settings.jsx
 │   ├── components/

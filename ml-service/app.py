@@ -32,19 +32,6 @@ def set_cache(ticker, data):
 def health():
     return jsonify({"ok": True, "service": "quantyx-ml"})
 
-import os
-import google.generativeai as genai
-from flask import request, jsonify
-from dotenv import load_dotenv
-
-# Load environment variables
-load_dotenv()
-
-# Configure the Gemini API
-genai.configure(api_key=os.environ.get("GEMINI_API_KEY"))
-
-# Initialize the model (Gemini 1.5 Flash is great for fast text responses)
-model = genai.GenerativeModel('gemini-1.5-flash')
     
 # ── Predict ───────────────────────────────────────────────────
 @app.get("/predict/<ticker>")
